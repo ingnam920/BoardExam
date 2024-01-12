@@ -2,6 +2,7 @@ package com.example.board.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller // Http요청을 받아서 응답을 하는 컴포넌트 , 스프링부트가 자동으로 Bean으로 생성한다.
 public class BoardController {
@@ -11,6 +12,20 @@ public class BoardController {
     //list를 리턴한다는것은 classpath:/(resources)templates/list.html list를 사용한다는것이다 . 확장자는 html이다
     @GetMapping("/") // /에대한 요청을 받아들여서 처리하는 메인페이지
     public String list(){
+        //게시물의목록을읽어온다, 페이징처리(todo)
         return "list"; //리스트란이름의 템플릿을 리턴한다.
     }
+
+    // 글의제목태그아이디 boardid?=1 , board=2 ....처리하기위해
+    @GetMapping("/board")
+    public String board(
+            @RequestParam("id") int id
+    ){
+        //해당게시물을 가져온다.(todo)
+        //id의 해당하는 게시글의 조회수도 1 증가(todo)
+        return "board";
+    }
+
+    //삭제한다(todo)
+    //수정한다(todo)
 }

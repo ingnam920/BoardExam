@@ -27,9 +27,33 @@ public class UserController {
         //서버는 당연히 Get방식으로 /welcome을 처리할수있어야한다 ??
     }
     //http://lcoalhost:8080/welcom --------> 요청왔을때 /welcome 이라는 템플릿사용됨
-    @GetMapping("/welcome")
+    @GetMapping ("/welcome")
     public String welcome(){
         return "welcome";
     }
+
+    @GetMapping("/loginForm") // /loginForm이라는 요청이들어오면 login이란 템플릿이 보여지도록
+    public String loginForm(){
+        return "loginForm";
+    }
+
+    @PostMapping("/login")
+    //login은 loginForm에서 전달해주는 폼을 받아야하므로
+    public String login(
+            @RequestParam("email") String email,
+            @RequestParam("password") String password
+    ){
+        //email에 해당하는 회원정보읽어온후 비번이 맞다면 세션에 회원정보를 저장한다.(todo)
+
+        return "redirect:/";
+    }
+
+    //list.html에서 logout 태그를 선택하면 게시물목록으로 이동하도록
+    //logout을 Get방식으로 요청 응답값옴(*302) -> 브라우저한테 자동 리다이렉트 응답시키는것
+    @GetMapping("/logout")
+        public String logout(){
+        //세션에서 회원정보를 삭제한다(todo)
+            return "redirect:/"; //
+        }
 
 }
