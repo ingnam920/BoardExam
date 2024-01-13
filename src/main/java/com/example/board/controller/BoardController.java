@@ -1,6 +1,10 @@
 package com.example.board.controller;
 
+
+import com.example.board.dto.LoginInfo;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,8 +16,11 @@ public class BoardController {
     // http://localhost:8080 / ----> 스프링 내부적으로 "list"리턴받아서 "list"라는 이름의 템플릿을 사용(Forward)하여 화면에 출력.
     //list를 리턴한다는것은 classpath:/(resources)templates/list.html list를 사용한다는것이다 . 확장자는 html이다
     @GetMapping("/") // /에대한 요청을 받아들여서 처리하는 메인페이지
-    public String list(){
+    public String list(HttpSession httpSession, Model model){ // 처음 리스트 화면 세션처리하려면 //http세션과 모델은 스프링이자동주입
         //게시물의목록을읽어온다, 페이징처리(todo)
+        LoginInfo loginInfo = (LoginInfo) httpSession.getAttribute("loginInfo");
+        //위에 loginInfo를 밑에 템플릿에다가 전달해준다. 그렇게 전달해줄려면 Model객체 필요
+        model.addAttribute("loginInfo",loginInfo); //  템플릿 즉 밑에 list에다가 객체를 넘기게된다
         return "list"; //리스트란이름의 템플릿을 리턴한다.
     }
 

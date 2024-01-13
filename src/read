@@ -6,3 +6,6 @@ insert into user (email,name,password,regdate) values (?,?,?,now());
 select LAST_INSERT_ID();
 insert into user_role(user_id,role_id) values (?,1);
 //회원가입정보 저장되고 권한정보도 저장했다.... (이3줄)
+
+tymeleaf? if문
+th:if="${info.useYn == 'Y'}""

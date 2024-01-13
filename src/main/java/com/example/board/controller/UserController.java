@@ -1,12 +1,19 @@
 package com.example.board.controller;
 
+import com.example.board.dto.LoginInfo;
+import com.example.board.dto.User;
+import com.example.board.service.Userservice;
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
+@RequiredArgsConstructor
 public class UserController {
+    private final Userservice userservice; // 자동으로 생성자 초기화해주는 롬복때매
     // 회원가입폼은 Getmapping
     // http://localhost:8080/userRegForm요청을하면
     // classpath:/templates/userRegForm.html.html
@@ -22,6 +29,11 @@ public class UserController {
         @RequestParam("name") String name,
         @RequestParam("email") String email,
         @RequestParam("password") String password){
+
+        System.out.println(name);
+        System.out.println(email);
+        userservice.addUser(name,email,password);
+
         return "redirect:/welcome"; //브라우저에게 자동으로 http://lcoalhost:8080/welcom으로 이동
         //welcome으로 리다이렉트하게되면 (GET방식으로/welcome경로를 요청)
         //서버는 당연히 Get방식으로 /welcome을 처리할수있어야한다 ??
@@ -39,12 +51,29 @@ public class UserController {
 
     @PostMapping("/login")
     //login은 loginForm에서 전달해주는 폼을 받아야하므로
+
     public String login(
             @RequestParam("email") String email,
-            @RequestParam("password") String password
+            @RequestParam("password") String password,
+            HttpSession httpSession
+            //컨트롤러의 메서드 뒤에다가 세션설정 제일쉬움 , 스프링이 자동으로 세션을 처리하는 HTTP세션객체
     ){
         //email에 해당하는 회원정보읽어온후 비번이 맞다면 세션에 회원정보를 저장한다.(todo)
+        try{
+            User user=userservice.getUser(email);
+            if(user.getPassword().equals(password)){
+                System.out.println("암호가같다");
+                LoginInfo loginInfo = new LoginInfo(user.getUserId(),user.getEmail(),user.getName());
+                httpSession.setAttribute("loginInfo", loginInfo); //첫번째파라미터 key, 두번째 값.
+                //세션은 현 부라우저사용자만 접근 각각 다른사용자의 브라우저마다 다르게설정
+                System.out.println("세션에 로그인정보저장");
 
+            }else{
+                throw new RuntimeException("일치하지않아");
+            }
+        }catch (Exception e){
+            return "redirect:/loginForm?error=true";
+        }
         return "redirect:/";
     }
 
